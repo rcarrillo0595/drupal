@@ -1,0 +1,5 @@
+name = Primer Modulo
+description = First form for ITM
+core = 7.x
+version = 7.x-1.0
+package = ITM

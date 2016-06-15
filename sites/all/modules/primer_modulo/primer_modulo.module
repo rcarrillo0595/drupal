@@ -1,0 +1,105 @@
+<?php
+
+/*
+* @file
+*
+* primer_module.module
+*/
+
+/**
+* Implements hook_help.
+*/
+function primer_modulo_help($path, $arg) {
+  switch($path) {
+    case "admin/help#primer_modulo":
+      return '<p>' . t("This is the help form for the module 'ITM Form', just an
+        example of how to use hook_help."). '</p>';
+  }
+}
+
+/*
+* Implements hook_menu.
+*/
+
+function primer_modulo_menu() {
+  $items=array();
+
+  $items['itm/form'] = array(
+    'title' => t('ITM form'),
+    'page callback' => 'drupal_get_form',
+    //nombre de la funcion que mostrara nuestro formulario
+    'page arguments' => array('itm_form_form'),
+    'access callback' => TRUE,
+    );
+  return $items;
+}
+
+  /*
+  *Form itm_form_form
+  */
+  function itm_form_form($form, &$form_state) {
+  $form['group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('My first form'),
+    '#collapsible' => TRUE,
+    );
+
+$form['group']['primer_modulo_nombre'] = array(
+  '#type' => 'textfield',
+  '#description' => t('Add your name here'),
+  '#title' => t('Name'),
+  '#size' => 50,
+  '#required' => TRUE,
+  '#default_value' => variable_get('primer_modulo_nombre'),
+  );
+
+$form['group']['primer_modulo_descripcion'] = array(
+  '#type' => 'textarea',
+  '#description' => t('Add your description here'),
+  '#title' => t('Bio'),
+  '#cols' => 100,
+  '#required' => TRUE,
+  '#default_value' => variable_get('primer_modulo_descripcion'),
+  );
+
+$form['group']['primer_modulo_age'] = array(
+  '#type' => 'textfield',
+  '#title' => 'Edad',
+  '#description' => t('Add your age here'),
+  '#size' => 10,
+  '#required' => TRUE,
+  '#default_value' => variable_get('primer_modulo_age'),
+
+  );
+
+$form['group']['primer_modulo_submit'] = array(
+  '#type' => 'submit',
+  '#value' => t('Send'),
+  '#cols' => 100,
+  );
+
+//dpm($form, 'the form');
+
+  return $form;
+}
+
+function itm_form_form_validate($form,&$form_state) {
+  //dpm($form_state);
+//dpm($form_state['values']['primer_modulo_age'],'edad');
+if (!is_numeric($form_state['values']['primer_modulo_age']) || !$form_state['values']
+  ['primer_modulo_age'] > 0) {
+  form_set_error('primer_modulo_age','The age should be a possitive number.');
+}
+
+}
+
+
+
+function itm_form_form_submit($form,&$form_state) {
+
+
+variable_set('primer_modulo_nombre', $form_state['values']['primer_modulo_nombre']);
+variable_set('primer_modulo_age', $form_state['values']['primer_modulo_age']);
+variable_set('primer_modulo_descripcion', $form_state['values']['primer_modulo_descripcion']);
+drupal_set_message('El mensaje ha sido enviado correctamente');
+}
